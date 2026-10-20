@@ -3,6 +3,9 @@ package sg.hospai.hospital;
 import org.springframework.stereotype.Service;
 import sg.hospai.hospital.requests.CreateHospitalRequest;
 
+import java.math.BigInteger;
+import java.util.Optional;
+
 @Service
 public class HospitalService {
 
@@ -17,5 +20,9 @@ public class HospitalService {
     public Hospital create(CreateHospitalRequest request) {
         Hospital hospital = hospitalMapper.toEntity(request);
         return hospitalRepository.save(hospital);
+    }
+
+    public Hospital getById(Long id) {
+        return hospitalRepository.findById(id).orElseThrow();
     }
 }

@@ -49,6 +49,4 @@
 |2|1|INACTIVE|21/10|22/10|
 
 ### Questions
-- Can I edit the number of beds, rooms and wards after created? No
-- Are room codes generated from their respective names? Yes
-- How does the admission log work??
+- Are room codes generated from their respective names? Yes, first 3 letters

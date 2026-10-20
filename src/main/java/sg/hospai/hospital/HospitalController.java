@@ -23,4 +23,9 @@ public class HospitalController {
     HospitalResponse create(@Valid @RequestBody CreateHospitalRequest request) {
         return hospitalMapper.toResponse(hospitalService.create(request));
     }
+
+    @GetMapping("/{id}")
+    HospitalResponse getById(@PathVariable Long id) {
+        return hospitalMapper.toResponse(hospitalService.getById(id));
+    }
 }
