@@ -1,16 +1,44 @@
 # Domain Modelling
 
-- Hopital
+- **Hospital**
+  - id
+  - name
+  - phone
+  - cnpj
 
-- Ward (ala)
+- **Ward (ala)**
+  - id
+  - hospital_id
+  - speciality
+      - enum: ...
 
-- Room
+- **Room**
+  - id
+  - ward_id
+  - room_code (generated)
 
-- Bed (leito)
+- **Bed (leito)**
+  - id
+  - room_id
+  - bed_number
+  - status
+    - enum: IN_PREPARATION, UNOCCUPIED, OCCUPIED
 
-- Patient
+- **Patient**
+  - id
+  - name
+  - cpf
+  - phone
 
-- Log
+- **Admission Log**
+  - id
+  - bed_id
+  - patient_id
+  - created_at
+  - status
+    - enum: ACTIVE, INACTIVE
+  - admission_at
+  - discharge_at
 
 ### Log example
 |patient_id|bed_id|status|adm_at|dis_at|

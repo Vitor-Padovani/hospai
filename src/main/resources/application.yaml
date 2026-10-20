@@ -1,3 +1,19 @@
+server:
+  servlet:
+    context-path: /api
+
 spring:
   application:
-    name: hospai
+    name: hospapi
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hospapi
+    username: postgres
+    password: changeme
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+springdoc:
+  default-produces-media-type: application/json

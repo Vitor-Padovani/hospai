@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: hospapi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8081:8080"
