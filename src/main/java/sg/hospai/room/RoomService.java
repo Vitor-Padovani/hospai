@@ -24,9 +24,10 @@ public class RoomService {
     public List<Room> create(Long wardId, CreateRoomsRequest request) {
         Ward ward = wardService.getById(wardId);
         List<Room> rooms = new ArrayList<Room>();
-        for (int i = 0; i < request.number_of_rooms(); i++) { // TODO: péssima performance
+        for (int i = 1; i < request.number_of_rooms() + 1; i++) { // TODO: péssima performance
             Room room = new Room();
             room.setWard(ward);
+            room.setNumber(i);
             rooms.add(room);
             roomRepository.save(room);
         }

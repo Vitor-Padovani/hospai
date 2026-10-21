@@ -15,6 +15,7 @@
 - **Room**
   - id
   - ward_id
+  - number
   - room_code (generated)
 
 - **Bed (leito)**

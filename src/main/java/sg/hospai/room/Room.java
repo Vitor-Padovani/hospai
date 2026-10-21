@@ -18,4 +18,7 @@ public class Room {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ward_id")
     private Ward ward;
+
+    @Column(nullable = false)
+    private Integer number;
 }
