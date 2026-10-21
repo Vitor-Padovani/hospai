@@ -1,4 +1,4 @@
-package sg.hospai.hospital.responses;
+package sg.hospai.hospital.dtos;
 
 public record HospitalResponse(
         Long id,

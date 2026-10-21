@@ -17,9 +17,9 @@ public class Hospital {
     @Column(nullable = false)
     private String name;
 
-    @Column(length = 14)
+    @Column(nullable = false, length = 14)
     private String phone;
 
-    @Column(length = 14, unique = true)
+    @Column(nullable = false, length = 14, unique = true)
     private String cnpj;
 }

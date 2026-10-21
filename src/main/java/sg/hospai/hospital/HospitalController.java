@@ -3,8 +3,9 @@ package sg.hospai.hospital;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import sg.hospai.hospital.requests.CreateHospitalRequest;
-import sg.hospai.hospital.responses.HospitalResponse;
+import sg.hospai.hospital.dtos.CreateHospitalRequest;
+import sg.hospai.hospital.dtos.HospitalResponse;
+import sg.hospai.hospital.dtos.HospitalSummaryResponse;
 
 @RestController
 @RequestMapping("/hospitals")
@@ -25,7 +26,7 @@ public class HospitalController {
     }
 
     @GetMapping("/{id}")
-    HospitalResponse getById(@PathVariable Long id) {
-        return hospitalMapper.toResponse(hospitalService.getById(id));
+    HospitalSummaryResponse getById(@PathVariable Long id) {
+        return hospitalMapper.toSummaryResponse(hospitalService.getSummary(id));
     }
 }
