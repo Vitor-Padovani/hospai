@@ -21,8 +21,8 @@ public class RoomService {
         this.wardService = wardService;
     }
 
-    public List<Room> create(Long ward_id, CreateRoomsRequest request) {
-        Ward ward = wardService.getById(ward_id);
+    public List<Room> create(Long wardId, CreateRoomsRequest request) {
+        Ward ward = wardService.getById(wardId);
         List<Room> rooms = new ArrayList<Room>();
         for (int i = 0; i < request.number_of_rooms(); i++) { // TODO: péssima performance
             Room room = new Room();
@@ -31,5 +31,10 @@ public class RoomService {
             roomRepository.save(room);
         }
         return rooms;
+    }
+
+    public List<Room> listByWard(Long wardId) {
+        wardService.getById(wardId);
+        return roomRepository.findByWardId(wardId);
     }
 }

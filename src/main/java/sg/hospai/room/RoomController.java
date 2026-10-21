@@ -27,4 +27,9 @@ public class RoomController {
     ) {
         return roomMapper.toResponse(roomService.create(wardId, request));
     }
+
+    @GetMapping
+    public List<RoomResponse> list(@PathVariable Long wardId) {
+        return roomMapper.toResponse(roomService.listByWard(wardId));
+    }
 }
