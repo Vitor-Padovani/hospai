@@ -3,8 +3,10 @@ package sg.hospai.bed;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sg.hospai.bed.dtos.CreateBedsRequest;
+import sg.hospai.hospital.HospitalService;
 import sg.hospai.room.Room;
 import sg.hospai.room.RoomService;
+import sg.hospai.ward.Speciality;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +16,12 @@ public class BedService {
 
     private final BedRepository bedRepository;
     private final RoomService roomService;
+    private final HospitalService hospitalService;
 
-    public BedService(BedRepository bedRepository, RoomService roomService) {
+    public BedService(BedRepository bedRepository, RoomService roomService, HospitalService hospitalService) {
         this.bedRepository = bedRepository;
         this.roomService = roomService;
+        this.hospitalService = hospitalService;
     }
 
     @Transactional
@@ -39,5 +43,11 @@ public class BedService {
         // Just verifies existence
         roomService.getById(roomId);
         return bedRepository.findByRoomIdOrderByNumber(roomId);
+    }
+
+    public List<Bed> listAvailable(Long hospitalId, Speciality speciality) {
+        // Just verifies existence
+        hospitalService.getById(hospitalId);
+        return bedRepository.findAvailableByHospitalIdAndSpeciality(hospitalId, speciality, Status.UNOCCUPIED);
     }
 }

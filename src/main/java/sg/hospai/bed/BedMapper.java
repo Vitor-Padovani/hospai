@@ -2,7 +2,10 @@ package sg.hospai.bed;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import sg.hospai.bed.dtos.AvailableBedResponse;
 import sg.hospai.bed.dtos.BedResponse;
+import sg.hospai.room.Room;
 
 import java.util.List;
 
@@ -13,4 +16,17 @@ public interface BedMapper {
     BedResponse toResponse(Bed bed);
 
     List<BedResponse> toResponse(List<Bed> bed);
+
+    @Mapping(source = "room.id", target = "roomId")
+    @Mapping(source = "room", target = "roomCode", qualifiedByName = "roomCode")
+    @Mapping(source = "room.ward.id", target = "wardId")
+    @Mapping(source = "room.ward.speciality", target = "speciality")
+    AvailableBedResponse toAvailableResponse(Bed bed);
+
+    List<AvailableBedResponse> toAvailableResponse(List<Bed> beds);
+
+    @Named("roomCode")
+    default String roomCode(Room room) {
+        return room.getWard().getSpeciality().getPrefix() + "-" + room.getNumber();
+    }
 }
