@@ -1,6 +1,7 @@
 package sg.hospai.room;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sg.hospai.shared.NotFoundException;
 import sg.hospai.room.dtos.CreateRoomsRequest;
 import sg.hospai.ward.Ward;
@@ -22,13 +23,15 @@ public class RoomService {
         this.wardService = wardService;
     }
 
+    @Transactional
     public List<Room> create(Long wardId, CreateRoomsRequest request) {
         Ward ward = wardService.getById(wardId);
+        int lastNumber = roomRepository.findMaxNumberByWardId(wardId);
         List<Room> rooms = new ArrayList<Room>();
-        for (int i = 1; i < request.number_of_rooms() + 1; i++) { // Bad performance
+        for (int i = 1; i < request.number_of_rooms() + 1; i++) { // Bad performance?
             Room room = new Room();
             room.setWard(ward);
-            room.setNumber(i);
+            room.setNumber(lastNumber + i);
             rooms.add(room);
             roomRepository.save(room);
         }

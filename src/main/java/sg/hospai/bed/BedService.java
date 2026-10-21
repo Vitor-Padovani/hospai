@@ -23,11 +23,12 @@ public class BedService {
     @Transactional
     public List<Bed> create(Long roomId, CreateBedsRequest request) {
         Room room = roomService.getById(roomId);
+        int lastNumber = bedRepository.findMaxNumberByRoomId(roomId);
         List<Bed> beds = new ArrayList<>();
-        for (int i = 1; i <= request.count(); i++) {
+        for (int i = 1; i <= request.count(); i++) {  // Bad performance?
             Bed bed = new Bed();
             bed.setRoom(room);
-            bed.setNumber(i);
+            bed.setNumber(lastNumber + i);
             bed.setStatus(Status.UNOCCUPIED);
             beds.add(bed);
         }
