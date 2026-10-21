@@ -32,9 +32,4 @@ public class BedController {
     public List<BedResponse> list(@PathVariable Long roomId) {
         return bedMapper.toResponse(bedService.listByRoom(roomId));
     }
-
-    @PostMapping("/{id}/release")
-    public BedResponse release(@PathVariable Long id) {
-        return bedMapper.toResponse(bedService.release(id));
-    }
 }

@@ -3,9 +3,9 @@ package sg.hospai.bed;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sg.hospai.bed.dtos.CreateBedsRequest;
-import sg.hospai.hospital.HospitalService;
+import sg.hospai.hospital.HospitalRepository;
 import sg.hospai.room.Room;
-import sg.hospai.room.RoomService;
+import sg.hospai.room.RoomRepository;
 import sg.hospai.shared.BusinessRuleException;
 import sg.hospai.shared.NotFoundException;
 import sg.hospai.ward.Speciality;
@@ -17,21 +17,27 @@ import java.util.List;
 public class BedService {
 
     private final BedRepository bedRepository;
-    private final RoomService roomService;
-    private final HospitalService hospitalService;
+    private final RoomRepository roomRepository;
+    private final HospitalRepository hospitalRepository;
 
-    public BedService(BedRepository bedRepository, RoomService roomService, HospitalService hospitalService) {
+    public BedService(BedRepository bedRepository, RoomRepository roomRepository,
+                       HospitalRepository hospitalRepository) {
         this.bedRepository = bedRepository;
-        this.roomService = roomService;
-        this.hospitalService = hospitalService;
+        this.roomRepository = roomRepository;
+        this.hospitalRepository = hospitalRepository;
     }
 
     @Transactional
     public List<Bed> create(Long roomId, CreateBedsRequest request) {
-        Room room = roomService.getById(roomId);
-        int lastNumber = bedRepository.findMaxNumberByRoomId(roomId);
+        Room room = getRoomOrThrow(roomId);
+        return createBeds(room, request.count());
+    }
+
+    @Transactional
+    public List<Bed> createBeds(Room room, int count) {
+        int lastNumber = bedRepository.findMaxNumberByRoomId(room.getId());
         List<Bed> beds = new ArrayList<>();
-        for (int i = 1; i <= request.count(); i++) {  // Bad performance?
+        for (int i = 1; i <= count; i++) {
             Bed bed = new Bed();
             bed.setRoom(room);
             bed.setNumber(lastNumber + i);
@@ -43,14 +49,20 @@ public class BedService {
 
     public List<Bed> listByRoom(Long roomId) {
         // Just verifies existence
-        roomService.getById(roomId);
+        getRoomOrThrow(roomId);
         return bedRepository.findByRoomIdOrderByNumber(roomId);
     }
 
     public List<Bed> listAvailable(Long hospitalId, Speciality speciality) {
         // Just verifies existence
-        hospitalService.getById(hospitalId);
+        hospitalRepository.findById(hospitalId)
+                .orElseThrow(() -> new NotFoundException("Hospital " + hospitalId + " not found"));
         return bedRepository.findAvailableByHospitalIdAndSpeciality(hospitalId, speciality, Status.UNOCCUPIED);
+    }
+
+    private Room getRoomOrThrow(Long roomId) {
+        return roomRepository.findById(roomId)
+                .orElseThrow(() -> new NotFoundException("Room " + roomId + " not found!"));
     }
 
     public Bed getById(Long id) {

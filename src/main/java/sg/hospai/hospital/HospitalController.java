@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sg.hospai.hospital.dtos.CreateHospitalRequest;
-import sg.hospai.hospital.dtos.HospitalResponse;
 import sg.hospai.hospital.dtos.HospitalSummaryResponse;
 
 @RestController
@@ -21,8 +20,8 @@ public class HospitalController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    HospitalResponse create(@Valid @RequestBody CreateHospitalRequest request) {
-        return hospitalMapper.toResponse(hospitalService.create(request));
+    HospitalSummaryResponse create(@Valid @RequestBody CreateHospitalRequest request) {
+        return hospitalMapper.toSummaryResponse(hospitalService.create(request));
     }
 
     @GetMapping("/{id}")
