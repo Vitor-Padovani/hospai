@@ -1,0 +1,35 @@
+package sg.hospai.room;
+
+import org.springframework.stereotype.Service;
+import sg.hospai.room.dtos.CreateRoomsRequest;
+import sg.hospai.ward.Ward;
+import sg.hospai.ward.WardService;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class RoomService {
+
+    private final RoomRepository roomRepository;
+    private final RoomMapper roomMapper;
+    private final WardService wardService;
+
+    public RoomService(RoomRepository roomRepository, RoomMapper roomMapper, WardService wardService) {
+        this.roomRepository = roomRepository;
+        this.roomMapper = roomMapper;
+        this.wardService = wardService;
+    }
+
+    public List<Room> create(Long ward_id, CreateRoomsRequest request) {
+        Ward ward = wardService.getById(ward_id);
+        List<Room> rooms = new ArrayList<Room>();
+        for (int i = 0; i < request.number_of_rooms(); i++) { // TODO: péssima performance
+            Room room = new Room();
+            room.setWard(ward);
+            rooms.add(room);
+            roomRepository.save(room);
+        }
+        return rooms;
+    }
+}

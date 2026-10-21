@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import sg.hospai.shared.BusinessRuleException;
 import sg.hospai.hospital.Hospital;
 import sg.hospai.hospital.HospitalService;
+import sg.hospai.shared.NotFoundException;
 import sg.hospai.ward.dtos.CreateWardRequest;
 
 import java.util.List;
@@ -36,5 +37,10 @@ public class WardService {
         // Just verifies existence
         hospitalService.getById(hospitalId);
         return wardRepository.findByHospitalIdOrderById(hospitalId);
+    }
+
+    public Ward getById(Long id) {
+        return wardRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ward " + id + " not found!"));
     }
 }
