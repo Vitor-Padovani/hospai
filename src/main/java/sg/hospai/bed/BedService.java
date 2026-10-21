@@ -6,6 +6,8 @@ import sg.hospai.bed.dtos.CreateBedsRequest;
 import sg.hospai.hospital.HospitalService;
 import sg.hospai.room.Room;
 import sg.hospai.room.RoomService;
+import sg.hospai.shared.BusinessRuleException;
+import sg.hospai.shared.NotFoundException;
 import sg.hospai.ward.Speciality;
 
 import java.util.ArrayList;
@@ -49,5 +51,40 @@ public class BedService {
         // Just verifies existence
         hospitalService.getById(hospitalId);
         return bedRepository.findAvailableByHospitalIdAndSpeciality(hospitalId, speciality, Status.UNOCCUPIED);
+    }
+
+    public Bed getById(Long id) {
+        return bedRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Bed " + id + " not found"));
+    }
+
+    @Transactional
+    public Bed occupy(Long id) {
+        Bed bed = getById(id);
+        if (bed.getStatus() != Status.UNOCCUPIED) {
+            throw new BusinessRuleException("Bed " + id + " is not available");
+        }
+        bed.setStatus(Status.OCCUPIED);
+        return bedRepository.save(bed);
+    }
+
+    @Transactional
+    public Bed prepare(Long id) {
+        Bed bed = getById(id);
+        if (bed.getStatus() != Status.OCCUPIED) {
+            throw new BusinessRuleException("Bed " + id + " is not occupied");
+        }
+        bed.setStatus(Status.IN_PREPARATION);
+        return bedRepository.save(bed);
+    }
+
+    @Transactional
+    public Bed release(Long id) {
+        Bed bed = getById(id);
+        if (bed.getStatus() != Status.IN_PREPARATION) {
+            throw new BusinessRuleException("Bed " + id + " is not in preparation");
+        }
+        bed.setStatus(Status.UNOCCUPIED);
+        return bedRepository.save(bed);
     }
 }
