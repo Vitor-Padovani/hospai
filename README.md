@@ -1,8 +1,11 @@
 # Hospai
 
-### Notes
- - application.yaml ainda usa ddl-auto: update e o Hospital ainda usa BigInteger
-
+## Setup
+```bash
+docker compose up -d
+sdk env # Opcional
+./mvnw spring-boot:run
+```
 ### Adminer
 - http://localhost:8081/?pgsql=postgres&username=postgres&db=hospapi&ns=public&table=hospitals
 
