@@ -49,6 +49,14 @@ public class AdmissionService {
                 .orElseThrow(() -> new NotFoundException("Admission " + id + " not found"));
     }
 
+    public Admission getCurrentAdmissionByPatient(Long patientId) {
+        // Verifies existence
+        patientService.getById(patientId);
+
+        return admissionRepository.getCurrentAdmissionByPatient(patientId)
+                .orElseThrow(() -> new NotFoundException("Active admission of patient " + patientId + " was not found"));
+    }
+
     @Transactional
     public Admission discharge(Long id) {
         Admission admission = getById(id);

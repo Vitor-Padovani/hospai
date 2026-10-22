@@ -20,8 +20,10 @@ public class BedAvailabilityController {
         this.bedMapper = bedMapper;
     }
 
-    @GetMapping("/hospitals/{hospitalId}/beds/available")
-    List<AvailableBedResponse> listAvailable(@PathVariable Long hospitalId, @RequestParam Speciality speciality) {
-        return bedMapper.toAvailableResponse(bedService.listAvailable(hospitalId, speciality));
+    @GetMapping("/beds/available")
+    List<AvailableBedResponse> listAvailable(
+            @RequestParam Speciality speciality, @RequestParam(required = false) Long hospitalId
+    ) {
+        return bedMapper.toAvailableResponse(bedService.listAvailable(speciality, hospitalId));
     }
 }

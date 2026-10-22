@@ -46,8 +46,10 @@ public class WardService {
         ward.setHospital(hospital);
         ward = wardRepository.save(ward);
 
+        // Proccess inner rooms or bed counts
         int roomCount = 0;
         int bedCount = 0;
+
         if (request.roomCount() != null) {
             int bedsPerRoom = request.bedsPerRoom() != null ? request.bedsPerRoom() : 0;
             roomCount = request.roomCount();
@@ -55,6 +57,7 @@ public class WardService {
                 roomService.createRoom(ward, bedsPerRoom);
             }
             bedCount = roomCount * bedsPerRoom;
+
         } else if (request.rooms() != null) {
             roomCount = request.rooms().size();
             for (CreateRoomRequest roomRequest : request.rooms()) {
@@ -63,6 +66,7 @@ public class WardService {
                 bedCount += roomBedCount;
             }
         }
+
         return new WardSummary(ward, roomCount, bedCount);
     }
 

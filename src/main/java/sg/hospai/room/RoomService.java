@@ -31,7 +31,7 @@ public class RoomService {
     public List<Room> create(Long wardId, CreateRoomsRequest request) {
         Ward ward = getWardOrThrow(wardId);
         int lastNumber = roomRepository.findMaxNumberByWardId(wardId);
-        List<Room> rooms = new ArrayList<Room>();
+        List<Room> rooms = new ArrayList<>();
         for (int i = 1; i < request.number_of_rooms() + 1; i++) { // Bad performance?
             Room room = new Room();
             room.setWard(ward);
@@ -43,21 +43,21 @@ public class RoomService {
     }
 
     @Transactional
-    public Room createRoom(Ward ward) {
-        int lastNumber = roomRepository.findMaxNumberByWardId(ward.getId());
-        Room room = new Room();
-        room.setWard(ward);
-        room.setNumber(lastNumber + 1);
-        return roomRepository.save(room);
-    }
-
-    @Transactional
     public Room createRoom(Ward ward, int bedCount) {
         Room room = createRoom(ward);
         if (bedCount > 0) {
             bedService.createBeds(room, bedCount);
         }
         return room;
+    }
+
+    @Transactional
+    public Room createRoom(Ward ward) {
+        int lastNumber = roomRepository.findMaxNumberByWardId(ward.getId());
+        Room room = new Room();
+        room.setWard(ward);
+        room.setNumber(lastNumber + 1);
+        return roomRepository.save(room);
     }
 
     public List<Room> listByWard(Long wardId) {

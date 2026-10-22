@@ -21,6 +21,7 @@ public interface BedMapper {
     @Mapping(source = "room", target = "roomCode", qualifiedByName = "roomCode")
     @Mapping(source = "room.ward.id", target = "wardId")
     @Mapping(source = "room.ward.speciality", target = "speciality")
+    @Mapping(source = "room.ward.hospital.id", target = "hospitalId")
     AvailableBedResponse toAvailableResponse(Bed bed);
 
     List<AvailableBedResponse> toAvailableResponse(List<Bed> beds);

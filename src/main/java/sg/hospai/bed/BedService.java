@@ -53,11 +53,14 @@ public class BedService {
         return bedRepository.findByRoomIdOrderByNumber(roomId);
     }
 
-    public List<Bed> listAvailable(Long hospitalId, Speciality speciality) {
-        // Just verifies existence
-        hospitalRepository.findById(hospitalId)
-                .orElseThrow(() -> new NotFoundException("Hospital " + hospitalId + " not found"));
-        return bedRepository.findAvailableByHospitalIdAndSpeciality(hospitalId, speciality, Status.UNOCCUPIED);
+    public List<Bed> listAvailable(Speciality speciality, Long hospitalId) {
+        if (hospitalId != null) {
+            // Just verifies existence
+            hospitalRepository.findById(hospitalId)
+                    .orElseThrow(() -> new NotFoundException("Hospital " + hospitalId + " not found"));
+            return bedRepository.findAvailableByHospitalIdAndSpeciality(hospitalId, speciality, Status.UNOCCUPIED);
+        }
+        return bedRepository.findAvailableBySpeciality(speciality, Status.UNOCCUPIED);
     }
 
     private Room getRoomOrThrow(Long roomId) {

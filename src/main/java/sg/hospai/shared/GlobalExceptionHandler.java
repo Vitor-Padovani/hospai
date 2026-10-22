@@ -27,11 +27,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem(HttpStatus.CONFLICT, "Business rule violated", ex.getMessage());
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    ProblemDetail handleDataIntegrity(DataIntegrityViolationException ex) {
-        return problem(HttpStatus.CONFLICT, "Data integrity violated", "The request conflicts with existing data");
-    }
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {

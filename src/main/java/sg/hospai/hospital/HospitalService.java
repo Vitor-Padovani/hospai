@@ -47,11 +47,13 @@ public class HospitalService {
         hospital = hospitalRepository.save(hospital);
 
         List<WardSummary> wardSummaries = new ArrayList<>();
+        // Process inner wards request
         if (request.wards() != null) {
             for (CreateWardRequest wardRequest : request.wards()) {
                 wardSummaries.add(wardService.create(hospital, wardRequest));
             }
         }
+
         return new HospitalSummary(hospital, wardSummaries);
     }
 
