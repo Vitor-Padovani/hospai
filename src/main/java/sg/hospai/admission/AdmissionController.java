@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sg.hospai.admission.dtos.AdmissionResponse;
 import sg.hospai.admission.dtos.CreateAdmissionRequest;
+import sg.hospai.admission.dtos.SpecialityAdmissionsResponse;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admissions")
@@ -22,6 +25,11 @@ public class AdmissionController {
     @ResponseStatus(HttpStatus.CREATED)
     AdmissionResponse admit(@Valid @RequestBody CreateAdmissionRequest request) {
         return admissionMapper.toResponse(admissionService.admit(request));
+    }
+
+    @GetMapping("/active")
+    List<SpecialityAdmissionsResponse> listActive() {
+        return admissionMapper.toGroupedResponse(admissionService.listActive());
     }
 
     @GetMapping("/{id}")

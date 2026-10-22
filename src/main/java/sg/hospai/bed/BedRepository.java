@@ -36,6 +36,15 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
             """)
     List<Bed> findAvailableBySpeciality(Speciality speciality, Status status);
 
+    @Query("""
+            select b from Bed b
+            join fetch b.room r
+            join fetch r.ward w
+            join fetch w.hospital h
+            order by h.id, w.speciality, r.number, b.number
+            """)
+    List<Bed> findAllWithLocation();
+
     @Query("select count(b) from Bed b where b.room.ward.id = :wardId")
     int countByWardId(Long wardId);
 }

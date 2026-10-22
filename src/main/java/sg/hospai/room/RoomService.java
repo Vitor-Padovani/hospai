@@ -3,8 +3,10 @@ package sg.hospai.room;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sg.hospai.bed.BedService;
+import sg.hospai.bed.Status;
 import sg.hospai.shared.NotFoundException;
 import sg.hospai.room.dtos.CreateRoomsRequest;
+import sg.hospai.room.dtos.RoomOccupancySummary;
 import sg.hospai.ward.Ward;
 import sg.hospai.ward.WardRepository;
 
@@ -63,6 +65,14 @@ public class RoomService {
     public List<Room> listByWard(Long wardId) {
         getWardOrThrow(wardId);
         return roomRepository.findByWardId(wardId);
+    }
+
+    public List<Room> listAvailable() {
+        return roomRepository.findWithBedByStatus(Status.UNOCCUPIED);
+    }
+
+    public List<RoomOccupancySummary> summarizeOccupancy() {
+        return roomRepository.summarizeBySpeciality(Status.UNOCCUPIED);
     }
 
     public Room getById(Long id) {

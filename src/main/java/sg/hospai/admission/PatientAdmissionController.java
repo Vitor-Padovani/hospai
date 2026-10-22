@@ -1,13 +1,16 @@
 package sg.hospai.admission;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sg.hospai.admission.dtos.AdmissionResponse;
+import sg.hospai.admission.dtos.CurrentAdmissionResponse;
+import sg.hospai.admission.dtos.PatientAdmissionHistoryResponse;
 
 @RestController
-@RequestMapping("/patients/{id}/current-admission")
+@RequestMapping("/patients/{id}")
 public class PatientAdmissionController {
 
     private final AdmissionService admissionService;
@@ -18,8 +21,14 @@ public class PatientAdmissionController {
         this.admissionMapper = admissionMapper;
     }
 
-    @GetMapping
-    AdmissionResponse getCurrentAdmission(@PathVariable Long id) {
-        return admissionMapper.toResponse(admissionService.getCurrentAdmissionByPatient(id));
+    @GetMapping("/current-admission")
+    CurrentAdmissionResponse getCurrentAdmission(@PathVariable Long id) {
+        return admissionMapper.toCurrentResponse(admissionService.getCurrentAdmissionByPatient(id));
+    }
+
+    @GetMapping("/admissions")
+    PagedModel<PatientAdmissionHistoryResponse> listAdmissions(@PathVariable Long id, Pageable pageable) {
+        return new PagedModel<>(
+                admissionService.listByPatient(id, pageable).map(admissionMapper::toPatientHistoryResponse));
     }
 }

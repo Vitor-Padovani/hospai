@@ -53,6 +53,10 @@ public class BedService {
         return bedRepository.findByRoomIdOrderByNumber(roomId);
     }
 
+    public List<Bed> listAll() {
+        return bedRepository.findAllWithLocation();
+    }
+
     public List<Bed> listAvailable(Speciality speciality, Long hospitalId) {
         if (hospitalId != null) {
             // Just verifies existence

@@ -1,5 +1,7 @@
 package sg.hospai.admission;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sg.hospai.admission.dtos.CreateAdmissionRequest;
@@ -11,6 +13,7 @@ import sg.hospai.shared.BusinessRuleException;
 import sg.hospai.shared.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class AdmissionService {
@@ -55,6 +58,24 @@ public class AdmissionService {
 
         return admissionRepository.getCurrentAdmissionByPatient(patientId)
                 .orElseThrow(() -> new NotFoundException("Active admission of patient " + patientId + " was not found"));
+    }
+
+    public Page<Admission> listByPatient(Long patientId, Pageable pageable) {
+        // Verifies existence
+        patientService.getById(patientId);
+
+        return admissionRepository.findHistoryByPatient(patientId, pageable);
+    }
+
+    public List<Admission> listByBed(Long bedId) {
+        // Verifies existence
+        bedService.getById(bedId);
+
+        return admissionRepository.findHistoryByBed(bedId);
+    }
+
+    public List<Admission> listActive() {
+        return admissionRepository.findActiveOrderedBySpecialityAndPatientName();
     }
 
     @Transactional
